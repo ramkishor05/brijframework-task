@@ -14,7 +14,7 @@ import org.brijframework.task.util.TaskResourcesUtil;
 import org.brijframework.util.reflect.AnnotationUtil;
 import org.brijframework.util.reflect.InstanceUtil;
 import org.brijframework.util.reflect.MethodUtil;
-import org.brijframework.util.reflect.PackUtil;
+import org.brijframework.util.reflect.ReflectionUtils;
 
 public class TaskContainer implements DefaultContainer{
 	
@@ -58,7 +58,7 @@ public class TaskContainer implements DefaultContainer{
 	}
 
 	private void taskloader() {
-		Collection<Class<?>> USRclasses = PackUtil.getProjectClasses();
+		Collection<Class<?>> USRclasses = ReflectionUtils.getInternalClassList();
 
 		ConcurrentHashMap<Object, Object> autoTask = new ConcurrentHashMap<>();
 		ConcurrentHashMap<Object, Object> defaultTask = new ConcurrentHashMap<>();
