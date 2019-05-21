@@ -18,54 +18,53 @@ public class ExecutorTimerTask {
 		executor = new Timer();
 		return taskExecutor;
 	}
-	public static void scheduleTasks(ReminderTask runnable) {
+	public  void scheduleTasks(ReminderTask runnable) {
 		executor.schedule(runnable, runnable.testSetup.initialDelay);
 	}
 
-	public static void scheduleTasks(List<ReminderTask> runnableList) {
+	public  void scheduleTasks(List<ReminderTask> runnableList) {
 		for (ReminderTask runnable : runnableList) {
 			executor.schedule(runnable, runnable.testSetup.initialDelay);
 		}
 	}
 
-	public static void schedulePeriodTask(ReminderTask runnable) {
+	public void schedulePeriodTask(ReminderTask runnable) {
 		executor.schedule(runnable, runnable.testSetup.initialDelay, runnable.testSetup.period);
 	}
 
-	public static void schedulePeriodTasks(List<ReminderTask> runnableList) {
+	public  void schedulePeriodTasks(List<ReminderTask> runnableList) {
 		for (ReminderTask runnable : runnableList) {
 			executor.schedule(runnable, runnable.testSetup.initialDelay, runnable.testSetup.period);
 		}
 	}
 	
-	public static void scheduleDateTask(ReminderTask runnable) {
+	public  void scheduleDateTask(ReminderTask runnable) {
 		executor.schedule(runnable, runnable.testSetup.detail.startDate, runnable.testSetup.period);
 	}
 
-	public static void scheduleDateTasks(List<ReminderTask> runnableList) {
+	public  void scheduleDateTasks(List<ReminderTask> runnableList) {
 		for (ReminderTask runnable : runnableList) {
 			executor.schedule(runnable, runnable.testSetup.detail.startDate, runnable.testSetup.period);
 		}
 	}
 
-	public static void scheduleAtFixedDelayTask(ReminderTask runnable) {
+	public  void scheduleAtFixedDelayTask(ReminderTask runnable) {
 		executor.scheduleAtFixedRate(runnable, runnable.testSetup.initialDelay, runnable.testSetup.period);
 	}
 
-	public static void scheduleAtFixedDelayTasks(List<ReminderTask> runnableList) {
+	public  void scheduleAtFixedDelayTasks(List<ReminderTask> runnableList) {
 		for (ReminderTask runnable : runnableList) {
 			executor.scheduleAtFixedRate(runnable, runnable.testSetup.initialDelay, runnable.testSetup.period);
 		}
 	}
 
-	public static void scheduleAtFixedDateTask(ReminderTask runnable) {
+	public  void scheduleAtFixedDateTask(ReminderTask runnable) {
 		executor.scheduleAtFixedRate(runnable, runnable.testSetup.detail.startDate, runnable.testSetup.period);
 	}
 
-	public static void scheduleAtFixedDateTasks(List<ReminderTask> runnableList) {
+	public  void scheduleAtFixedDateTasks(List<ReminderTask> runnableList) {
 		for (ReminderTask runnable : runnableList) {
 			executor.scheduleAtFixedRate(runnable, runnable.testSetup.detail.startDate, runnable.testSetup.period);
 		}
 	}
-
 }

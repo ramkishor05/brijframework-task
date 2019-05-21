@@ -32,7 +32,7 @@ public class CallableTask implements Callable {
     		 return null;
     	}
      	long t1 = System.currentTimeMillis();
-    	Object object=InstanceUtil.getInstance(testSetup.getOwner());
+    	Object object=InstanceUtil.getInstance(testSetup.getOwner().getTarget());
 		Method method= (Method) testSetup.getTarget();
 		Object objectParam[]=testSetup.getParametors();
 		Object result=LogicUnit.callMethod(object,method.getName(), objectParam); 

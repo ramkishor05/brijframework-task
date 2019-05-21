@@ -4,12 +4,12 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.brijframework.meta.KeyInfo;
 import org.brijframework.meta.asm.AbstractMetaInfo;
+import org.brijframework.meta.reflect.ClassMeta;
 import org.brijframework.util.casting.TimeUtil;
 import org.brijframework.util.validator.ValidationUtil;
 
-public class TaskMeta extends AbstractMetaInfo{
+public class TaskMeta extends AbstractMetaInfo<Method>{
 
 	public long initialDelay = 0;
 
@@ -100,8 +100,6 @@ public class TaskMeta extends AbstractMetaInfo{
 
 	private Method target;
 	
-	private Class<?> owner;
-	
 	@Override
 	public Method getTarget() {
 		return target;
@@ -110,27 +108,14 @@ public class TaskMeta extends AbstractMetaInfo{
 	public void setTarget(Method target) {
 		this.target = target;
 	}
-	
-	public Class<?> getOwner() {
-		return owner;
-	}
-	
-	public void setOwner(Class<?> owner) {
-		this.owner = owner;
-	}
-
-	@Override
-	public KeyInfo getKeyInfo() {
-		return null;
-	}
 
 	public Object[] getParametors() {
 		return null;
 	}
 
-	public void init(Class<?> clazz, Method method) {
-		// TODO Auto-generated method stub
-		
+	public void init(ClassMeta Owner, Method method) {
+		this.setId(Owner.getTarget().getSimpleName()+"_"+method.getName());
+		this.setOwner(Owner);
+		this.setTarget(method);
 	}
-
 }

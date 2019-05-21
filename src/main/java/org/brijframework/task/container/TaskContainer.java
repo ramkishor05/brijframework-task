@@ -1,36 +1,28 @@
 package org.brijframework.task.container;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.brijframework.core.container.DefaultContainer;
+import org.brijframework.asm.container.DefaultContainer;
 import org.brijframework.group.Group;
-import org.brijframework.support.monitor.Task;
-import org.brijframework.task.meta.TaskMeta;
-import org.brijframework.task.util.TaskResourcesUtil;
-import org.brijframework.util.reflect.AnnotationUtil;
+import org.brijframework.support.model.Assignable;
+import org.brijframework.support.model.DepandOn;
+import org.brijframework.task.factories.TaskFactory;
+import org.brijframework.task.group.TaskGroup;
 import org.brijframework.util.reflect.InstanceUtil;
 import org.brijframework.util.reflect.MethodUtil;
 import org.brijframework.util.reflect.ReflectionUtils;
 
 public class TaskContainer implements DefaultContainer{
 	
-	private static final String SYSTEM_TASK_CACHE = "SYSTEM_TASK_CACHE";
-	private static final String AUTO_TASK_CACHE = "AUTO_TASK_CACHE";
-	private static final String ON_DEMAND_TASK_CACHE = "ON_DEMAND_TASK_CACHE";
-	private static final String SCHEDULE_TASK_CACHE = "SCHEDULE_TASK_CACHE";
-	private static final String DEFAULT_TASK_CACHE = "DEFAULT_TASK_CACHE";
-	private static final String AUTO_TASK = "AUTO_TASK";
-	private static final String DEFAULT_TASK = "DEFAULT_TASK";
-	private static final String SCHEDULE_TASK = "SCHEDULE_TASK";
-	private static final String ON_DEMAND_TASK ="ON_DEMAND_TASK";
+	
 	private static TaskContainer container;
-	public Map<String, Object> cacheKeys = new HashMap<>();
-	@SuppressWarnings("rawtypes")
-	private ConcurrentHashMap<String, ConcurrentHashMap> taskContainerCache = new ConcurrentHashMap<String, ConcurrentHashMap>();
+	
+	private ConcurrentHashMap<Object, Group> cache = new ConcurrentHashMap<Object, Group>();
 
 	public static TaskContainer getContainer() {
 		if (container == null) {
@@ -40,86 +32,73 @@ public class TaskContainer implements DefaultContainer{
 		return container;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public TaskContainer loadContainer() {
-		this.cacheKeys.put(container.getClass().getSimpleName() + "_" + SYSTEM_TASK_CACHE, SYSTEM_TASK_CACHE);
-		this.cacheKeys.put(container.getClass().getSimpleName() + "_" + AUTO_TASK_CACHE, AUTO_TASK_CACHE);
-		this.cacheKeys.put(container.getClass().getSimpleName() + "_" + ON_DEMAND_TASK_CACHE, ON_DEMAND_TASK_CACHE);
-		this.cacheKeys.put(container.getClass().getSimpleName() + "_" + SCHEDULE_TASK_CACHE, SCHEDULE_TASK_CACHE);
-		this.cacheKeys.put(container.getClass().getSimpleName() + "_" + DEFAULT_TASK_CACHE, DEFAULT_TASK_CACHE);
-		this.loadFromJAR();
-		this.taskloader();
+		List<Class<? extends TaskFactory>> classes=new ArrayList<>();
+		try {
+			ReflectionUtils.getClassListFromExternal().forEach(cls->{
+				if(TaskFactory.class.isAssignableFrom(cls) && !cls.isInterface() && cls.getModifiers() != Modifier.ABSTRACT) {
+					classes.add((Class<? extends TaskFactory>) cls);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			ReflectionUtils.getClassListFromInternal().forEach(cls->{
+				if(TaskFactory.class.isAssignableFrom(cls) && !cls.isInterface() && cls.getModifiers() != Modifier.ABSTRACT) {
+					classes.add((Class<? extends TaskFactory>) cls);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		classes.forEach((taskFactory)->{
+			if(taskFactory.isAnnotationPresent(DepandOn.class)) {
+			   DepandOn depandOn=taskFactory.getAnnotation(DepandOn.class);
+			   loading(depandOn.depand());
+			}
+			loading(taskFactory);
+		});
 		return container;
 	}
 
-	private void loadFromJAR() {
-		ConcurrentHashMap<String, Object> systemTask = new ConcurrentHashMap<>();
-		this.taskContainerCache.put(SYSTEM_TASK_CACHE, systemTask);
-	}
-
-	private void taskloader() {
-		Collection<Class<?>> USRclasses = ReflectionUtils.getInternalClassList();
-
-		ConcurrentHashMap<Object, Object> autoTask = new ConcurrentHashMap<>();
-		ConcurrentHashMap<Object, Object> defaultTask = new ConcurrentHashMap<>();
-		ConcurrentHashMap<Object, Object> scheduleTask = new ConcurrentHashMap<>();
-		ConcurrentHashMap<Object, Object> onDemandTask = new ConcurrentHashMap<>();
-
-		for (Class<?> clazz : USRclasses) {
-			Collection<Method> methods = MethodUtil.getAllMethod(clazz);
-			for (Method method : methods) {
-				if (AnnotationUtil.isExistAnnotation(method, Task.class)) {
-					TaskMeta taskSetups = TaskResourcesUtil.getAutoTask(clazz, method);
-					if (taskSetups != null) {
-						autoTask.put(taskSetups.getId(), taskSetups);
-						System.err.format("BeanID-> %25s", taskSetups.getOwner().getSimpleName());
-						System.err.format("   For Auto   Task ID => %25s \n", taskSetups.getId());
-					}
-				}
-				if (AnnotationUtil.isExistAnnotation(method, Task.class)) {
-					TaskMeta taskSetups = TaskResourcesUtil.getDefualtTask(clazz, method);
-					if (taskSetups != null) {
-						defaultTask.put(taskSetups.getId(), taskSetups);
-						System.err.format("BeanID-> %25s", taskSetups.getOwner().getSimpleName());
-						System.err.format("   For Default   Task ID => %25s \n", taskSetups.getId());
-					}
-				}
-				if (AnnotationUtil.isExistAnnotation(method, Task.class)) {
-					TaskMeta taskSetups = TaskResourcesUtil.getScheduleTask(clazz, method);
-					if (taskSetups != null) {
-						scheduleTask.put(taskSetups.getId(), taskSetups);
-						System.err.format("BeanID-> %25s", taskSetups.getOwner().getSimpleName());
-						System.err.format("   For Schedule Task ID => %25s \n", taskSetups.getId());
-					}
-				}
-				if (AnnotationUtil.isExistAnnotation(method, Task.class)) {
-					TaskMeta taskSetups = TaskResourcesUtil.getOnDemandTask(clazz, method);
-					if (taskSetups != null) {
-						onDemandTask.put(taskSetups.getId(), taskSetups);
-						System.err.format("BeanID-> %25s", taskSetups.getOwner().getSimpleName());
-						System.err.format("   For OnDemand Task ID => %25s \n", taskSetups.getId());
-					}
+	private void loading(Class<?> cls) {
+		boolean called=false;
+		for(Method method:MethodUtil.getAllMethod(cls)) {
+			if(method.isAnnotationPresent(Assignable.class)) {
+				try {
+					method.invoke(null);
+					called=true;
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
 				}
 			}
 		}
-
-		this.taskContainerCache.put(AUTO_TASK, autoTask);
-		this.taskContainerCache.put(DEFAULT_TASK, defaultTask);
-		this.taskContainerCache.put(SCHEDULE_TASK, scheduleTask);
-		this.taskContainerCache.put(ON_DEMAND_TASK, onDemandTask);
-
+		if(!called) {
+			try {
+				TaskFactory container=(TaskFactory) cls.newInstance();
+				container.loadFactory();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ConcurrentHashMap getCache() {
-		return this.taskContainerCache;
+	public ConcurrentHashMap<Object, Group> getCache() {
+		return this.cache;
 	}
 
 	@Override
 	public Group load(Object groupKey) {
-		// TODO Auto-generated method stub
-		return null;
+		Group group=getCache().get(groupKey);
+		if(group==null) {
+			group=new TaskGroup(groupKey);
+			getCache().put(groupKey, group);
+		}
+		return group;
 	}
 
 

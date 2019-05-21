@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.brijframework</groupId>
-			<artifactId>org.brijframework-core</artifactId>
+			<artifactId>org.brijframework-meta</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>

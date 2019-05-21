@@ -15,7 +15,6 @@ public abstract class TaskBean {
 		return (TaskMeta) InstanceUtil.getInstance(TaskMeta.class,json);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setTaskSetup(TaskMeta taskSetup) {
 		//Map<String, Object> json= (Map<String, Object>) GraphModelBulider.getBulider(taskSetup).objectGraph();
 		this.details = JSONUtil.getJSONObjectFromObject("").toString();

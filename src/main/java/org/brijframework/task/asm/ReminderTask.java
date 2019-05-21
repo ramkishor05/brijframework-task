@@ -11,11 +11,14 @@ import org.brijframework.util.reflect.LogicUnit;
 public class ReminderTask extends TimerTask{
 	public volatile Future<?> taskFuture = null;
 	public volatile TaskMeta testSetup;
+	
+	public ReminderTask(TaskMeta testSetup) {
+		this.testSetup=testSetup;
+	}
+	
 	@Override
     public void run() {
-		synchronized (taskFuture) {
-			excuteTesk(testSetup);
-		}
+		excuteTesk(testSetup);
     }
     
     public  void preTask(TaskMeta testSetup){
@@ -24,12 +27,9 @@ public class ReminderTask extends TimerTask{
     }
     
     public  void excuteTesk(TaskMeta testSetup) {
-    	if(!testSetup.isExecute) {
-   		  return ;
-   	    }
     	preTask(testSetup);
     	long t1 = System.currentTimeMillis();
-    	Object object=InstanceUtil.getInstance(testSetup.getOwner());
+    	Object object=InstanceUtil.getInstance(testSetup.getOwner().getTarget());
 		Method method= (Method) testSetup.getTarget();
 		Object objectParam[]=testSetup.getParametors();
 		LogicUnit.callMethod(object,method.getName(), objectParam);  
