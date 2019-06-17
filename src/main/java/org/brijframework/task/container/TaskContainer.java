@@ -4,10 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.brijframework.asm.container.DefaultContainer;
+import org.brijframework.context.Context;
+import org.brijframework.factories.Factory;
 import org.brijframework.group.Group;
 import org.brijframework.support.model.Assignable;
 import org.brijframework.support.model.DepandOn;
@@ -99,6 +102,24 @@ public class TaskContainer implements DefaultContainer{
 			getCache().put(groupKey, group);
 		}
 		return group;
+	}
+
+	@Override
+	public Context getContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Class<? extends Factory>> getClassList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setContext(Context context) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
