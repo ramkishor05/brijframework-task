@@ -3,11 +3,11 @@ package org.brijframework.task.meta;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-import org.brijframework.meta.reflect.ClassMeta;
+import org.brijframework.meta.info.ClassMetaInfo;
 
 public class RequestedTaskMeta extends TaskInfo{
 
-	public RequestedTaskMeta(ClassMeta owner, Method target) {
+	public RequestedTaskMeta(ClassMetaInfo owner, Method target) {
 		super(owner, target);
 	}
 

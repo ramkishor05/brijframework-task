@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.brijframework.meta.asm.AbstractMetaInfo;
-import org.brijframework.meta.reflect.ClassMeta;
+import org.brijframework.meta.info.ClassMetaInfo;
 import org.brijframework.util.casting.TimeUtil;
 import org.brijframework.util.validator.ValidationUtil;
 
@@ -113,7 +113,7 @@ public class TaskMeta extends AbstractMetaInfo<Method>{
 		return null;
 	}
 
-	public void init(ClassMeta Owner, Method method) {
+	public void init(ClassMetaInfo Owner, Method method) {
 		this.setId(Owner.getTarget().getSimpleName()+"_"+method.getName());
 		this.setOwner(Owner);
 		this.setTarget(method);

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import org.brijframework.meta.asm.AbstractMetaInfo;
-import org.brijframework.meta.reflect.ClassMeta;
+import org.brijframework.meta.info.ClassMetaInfo;
 
 public class TaskInfo extends AbstractMetaInfo<Method>{
 	
@@ -15,7 +15,7 @@ public class TaskInfo extends AbstractMetaInfo<Method>{
 	private Object[] parametors;
 	private String initObject;
 	
-	public TaskInfo(ClassMeta owner,Method target) {
+	public TaskInfo(ClassMetaInfo owner,Method target) {
 		this.target=target;
 		this.setOwner(owner);
 	}
