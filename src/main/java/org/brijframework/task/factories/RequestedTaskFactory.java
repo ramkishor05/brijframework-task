@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.brijframework.container.Container;
-import org.brijframework.support.model.Assignable;
+import org.brijframework.support.config.Assignable;
 import org.brijframework.support.monitor.RequestedTask;
 import org.brijframework.task.jobs.RequestedTaskRunner;
 import org.brijframework.task.meta.RequestedTaskMeta;

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.brijframework.container.Container;
-import org.brijframework.support.model.Assignable;
+import org.brijframework.support.config.Assignable;
 import org.brijframework.support.monitor.ScheduledTask;
 import org.brijframework.task.jobs.ScheduledTaskRunner;
 import org.brijframework.task.meta.ScheduledTaskMeta;
@@ -30,7 +30,6 @@ public class ScheduledTaskFactory implements TaskFactory{
 	public static ScheduledTaskFactory getFactory() {
 		if(factory==null) {
 			factory=new ScheduledTaskFactory();
-			factory.loadFactory();
 		}
 		return factory;
 	}
