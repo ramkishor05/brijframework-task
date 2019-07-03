@@ -3,10 +3,10 @@ package org.brijframework.task.meta;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-import org.brijframework.meta.asm.AbstractMetaInfo;
-import org.brijframework.meta.info.ClassMetaInfo;
+import org.brijframework.model.info.OwnerModelInfo;
+import org.brijframework.model.info.asm.AbstractModelInfo;
 
-public class TaskInfo extends AbstractMetaInfo<Method>{
+public class TaskInfo extends AbstractModelInfo<Method>{
 	
 	private long initial=1;
 	private long interval=1;
@@ -15,7 +15,7 @@ public class TaskInfo extends AbstractMetaInfo<Method>{
 	private Object[] parametors;
 	private String initObject;
 	
-	public TaskInfo(ClassMetaInfo owner,Method target) {
+	public TaskInfo(OwnerModelInfo owner,Method target) {
 		this.target=target;
 		this.setOwner(owner);
 	}

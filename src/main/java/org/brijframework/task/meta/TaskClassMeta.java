@@ -1,18 +1,18 @@
 package org.brijframework.task.meta;
 
-import org.brijframework.meta.asm.AbstractClassMetaInfo;
-import org.brijframework.meta.info.ConstMetaInfo;
-import org.brijframework.meta.info.FieldMetaInfo;
+import org.brijframework.model.info.ConstModelInfo;
+import org.brijframework.model.info.PptModelInfo;
+import org.brijframework.model.info.asm.AbstractClassModelInfo;
 
-public class TaskClassMeta extends AbstractClassMetaInfo{
+public class TaskClassMeta extends AbstractClassModelInfo{
 
 	@Override
-	public FieldMetaInfo getPropertyInfo(String _key) {
+	public PptModelInfo getPropertyInfo(String _key) {
 		return null;
 	}
 
 	@Override
-	public ConstMetaInfo getConstructor() {
+	public ConstModelInfo getConstructor() {
 		return null;
 	}
 

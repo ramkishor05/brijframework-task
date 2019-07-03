@@ -3,7 +3,7 @@ package org.brijframework.task.util;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.brijframework.meta.info.ClassMetaInfo;
+import org.brijframework.model.info.OwnerModelInfo;
 import org.brijframework.support.monitor.RequestedTask;
 import org.brijframework.support.monitor.ScheduledTask;
 import org.brijframework.support.monitor.Task;
@@ -17,7 +17,7 @@ import org.brijframework.util.text.StringUtil;
 
 public class TaskResourcesUtil {
 	
-	public static RequestedTaskMeta getRequestedTask(ClassMetaInfo owner, Method target) {
+	public static RequestedTaskMeta getRequestedTask(OwnerModelInfo owner, Method target) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(target, RequestedTask.class);
 		RequestedTaskMeta setups = new RequestedTaskMeta( owner,target);
 		PropertyAccessorUtil.setProperties(setups, map);
@@ -25,7 +25,7 @@ public class TaskResourcesUtil {
 		return setups;
 	}
 	
-	public static ScheduledTaskMeta getScheduledTask(ClassMetaInfo owner, Method target) {
+	public static ScheduledTaskMeta getScheduledTask(OwnerModelInfo owner, Method target) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(target, ScheduledTask.class);
 		ScheduledTaskMeta setups =new ScheduledTaskMeta(owner, target);
 		PropertyAccessorUtil.setProperties(setups, map);
@@ -34,14 +34,14 @@ public class TaskResourcesUtil {
 	}
 
 	
-	public static TaskMeta getSystemTask(ClassMetaInfo owner, Method method) {
+	public static TaskMeta getSystemTask(OwnerModelInfo owner, Method method) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(method, Task.class);
 		TaskMeta setups = (TaskMeta) InstanceUtil.getInstance(TaskMeta.class, map);
 		setups.init(owner, method);
 		return setups;
 	}
 
-	public static TaskMeta getAutoTask(ClassMetaInfo owner, Method method) {
+	public static TaskMeta getAutoTask(OwnerModelInfo owner, Method method) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(method, Task.class);
 		TaskMeta setups = (TaskMeta) InstanceUtil.getInstance(TaskMeta.class, map);
 		if (StringUtil.isEmpty(setups.startTime) || StringUtil.isEmpty(setups.startDate) && (setups.initialDelay != 0)) {
@@ -50,14 +50,14 @@ public class TaskResourcesUtil {
 		return setups;
 	}
 
-	public static TaskMeta getOnDemandTask(ClassMetaInfo owner, Method method) {
+	public static TaskMeta getOnDemandTask(OwnerModelInfo owner, Method method) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(method, Task.class);
 		TaskMeta setups = (TaskMeta) InstanceUtil.getInstance(TaskMeta.class, map);
 		setups.init(owner, method);
 		return setups;
 	}
 
-	public static TaskMeta getDefualtTask(ClassMetaInfo owner, Method method) {
+	public static TaskMeta getDefualtTask(OwnerModelInfo owner, Method method) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(method, Task.class);
 		TaskMeta setups = (TaskMeta) InstanceUtil.getInstance(TaskMeta.class, map);
 		if (StringUtil.isEmpty(setups.startDate) || StringUtil.isEmpty(setups.startTime) && (setups.initialDelay == 0)) {
@@ -66,7 +66,7 @@ public class TaskResourcesUtil {
 		return setups;
 	}
 
-	public static TaskMeta getScheduleTask(ClassMetaInfo owner, Method method) {
+	public static TaskMeta getScheduleTask(OwnerModelInfo owner, Method method) {
 		Map<String, Object> map = AnnotationUtil.getAnnotationData(method, Task.class);
 		TaskMeta setups = (TaskMeta) InstanceUtil.getInstance(TaskMeta.class, map);
 		if (StringUtil.isNonEmpty(setups.startDate) || StringUtil.isNonEmpty(setups.startTime)) {

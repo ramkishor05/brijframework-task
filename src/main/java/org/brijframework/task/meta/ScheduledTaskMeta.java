@@ -4,13 +4,13 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.brijframework.meta.info.ClassMetaInfo;
+import org.brijframework.model.info.OwnerModelInfo;
 import org.brijframework.util.casting.TimeUtil;
 import org.brijframework.util.validator.ValidationUtil;
 
 public class ScheduledTaskMeta extends TaskInfo{
 
-	public ScheduledTaskMeta(ClassMetaInfo owner, Method target) {
+	public ScheduledTaskMeta(OwnerModelInfo owner, Method target) {
 		super(owner, target);
 	}
 
